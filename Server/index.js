@@ -27,15 +27,21 @@ async function run() {
         await client.connect();
 
         // Database routs 
-        const database = client.db("foodease")
-        const foodsCollection = database.collection("foods")
+        const database = client.db("foodease"); 
+        const foodsCollection = database.collection("foods"); 
+        const cartsCollections = database.collection('carts'); 
+        // Cart collections . 
 
-
+        app.post('/cart' , async (req , res) => { 
+            const cart = req.body;
+            const result = await cartsCollections.insertOne(cart);
+            res.send(result);
+        })
 
         app.get('/foods', async (req, res) => {
-            const cursor = foodsCollection.find({})
-            const foods = await cursor.toArray()
-            res.send(foods)
+            const cursor = foodsCollection.find({}); 
+            const foods = await cursor.toArray(); 
+            res.send(foods); 
         })
 
 

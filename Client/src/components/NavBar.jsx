@@ -4,8 +4,8 @@ import { FiMenu } from 'react-icons/fi';
 const NavBar = () => {
   const [show, setShow] = useState(false)
   return (
-    <nav className='fixed md:px-20 px-7 top-0 w-full bg-blue-300'>
-      <div className=" flex justify-between items-center  py-2">
+    <nav className='fixed  top-0 w-full bg-white'>
+      <div className=" flex md:px-20 px-7 justify-between bg-blue-600 w-full items-center  backdrop-blur-2xl bg-opacity-20 py-4">
         <div className="">
           <h1 className='text-3xl font-bold'>Food Ease</h1>
         </div>
