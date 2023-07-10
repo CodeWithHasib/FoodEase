@@ -27,9 +27,16 @@ async function run() {
         await client.connect();
 
         // Database routs 
+        const database = client.db("foodease")
+        const foodsCollection = database.collection("foods")
 
 
 
+        app.get('/foods', async (req, res) => {
+            const cursor = foodsCollection.find({})
+            const foods = await cursor.toArray()
+            res.send(foods)
+        })
 
 
         // Send a ping to confirm a successful connection
