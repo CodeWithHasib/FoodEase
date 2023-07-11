@@ -43,6 +43,41 @@ async function run() {
             const cart = await cartsCollections.find(query).toArray();
             res.send(cart);
         })
+
+        app.get('/all-cart/:email', async (req, res) => {
+            const email = req.params.email;
+            const pipeline = [
+                {
+                    '$match': {
+                        'userEmail': email
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'foods',
+                        'localField': 'itemId',
+                        'foreignField': 'uuid',
+                        'as': 'food'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$food'
+                    }
+                },
+                {
+                    '$project': {
+                        'food': 1,
+                        'quantity': 1
+                    }
+                }
+            ]
+            const cursor = cartsCollections.aggregate(pipeline);
+            const cart = await cursor.toArray();
+            res.send(cart);
+
+        })
+
         app.get('/foods', async (req, res) => {
             const cursor = foodsCollection.find({});
             const foods = await cursor.toArray();

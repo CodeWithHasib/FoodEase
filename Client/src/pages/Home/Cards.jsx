@@ -7,8 +7,7 @@ const Cards = () => {
     const { user } = useContext(AuthContext)
     const [data, setData] = useState([]);
 
-    const [cartData, refetch , isLoading] = useAddToCart()
-    console.log(cartData)
+    const [cartData, refetch, isLoading] = useAddToCart()
     useEffect(() => {
         fetch('fakeData.json')
             .then((res) => res.json())
@@ -19,6 +18,12 @@ const Cards = () => {
     }, [refetch])
     const cartClickHandler = id => {
         console.log(id)
+        if (!user.email) {
+            return toast.error('Please login first')
+        }
+        if (cartData.find(item => item.itemId === id)) {
+            return toast.error('Already added to cart')
+        }
         fetch('http://localhost:5000/cart', {
             method: 'POST',
             headers: {
@@ -27,7 +32,8 @@ const Cards = () => {
             body: JSON.stringify({
                 itemId: id,
                 userName: user.displayName,
-                userEmail: user.email
+                userEmail: user.email,
+                quantity: 1
             })
         })
             .then(res => res.json())
