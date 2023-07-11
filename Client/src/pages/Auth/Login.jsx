@@ -1,15 +1,22 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { AuthContext } from '../../utils/AuthProvider';
 
 const Login = () => {
-    const { login } = useContext(AuthContext)
+    const { login, user } = useContext(AuthContext)
     const handleSubmit = e => {
         e.preventDefault();
         const fromData = new FormData(e.target);
         const data = Object.fromEntries(fromData);
-        console.log(data);
+        login(data.email, data.password)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
+    if (user) return <Navigate to='/' />
     return (
         <div className='mt-10'>
             <section className="py-26 bg-white">
