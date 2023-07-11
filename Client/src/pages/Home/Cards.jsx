@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useAddToCart } from '../../hooks/useAddToCart';
+import { AuthContext } from '../../utils/AuthProvider';
 
 const Cards = () => {
-    const user = { name: 'Hasib Hossain', email: 'hasib@rakibul.com' }
+    const { user } = useContext(AuthContext)
     const [data, setData] = useState([]);
-    console.log(data)
+
+    const [cartData, refetch] = useAddToCart()
+    console.log(cartData)
     useEffect(() => {
         fetch('fakeData.json')
             .then((res) => res.json())
@@ -18,12 +22,17 @@ const Cards = () => {
             },
             body: JSON.stringify({
                 itemId: id,
-                userName: user.name,
+                userName: user.displayName,
                 userEmail: user.email
             })
         })
             .then(res => res.json())
-            .then(result => console.log(result))
+            .then(result => {
+                console.log(result)
+                if (result.insertedId) {
+                    alert('Item added to cart')
+                }
+            })
     }
 
     return (

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 import { AuthContext } from '../utils/AuthProvider';
 import Swal from 'sweetalert2';
+import { useAddToCart } from '../hooks/useAddToCart';
 const navLinks = [
   { name: 'Home', link: '/' },
   { name: 'Items', link: '/' },
@@ -10,6 +11,7 @@ const navLinks = [
 ]
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
+  const [cartData] = useAddToCart();
   const [show, setShow] = useState(false);
   const location = useLocation();
   const logoutHandler = () => {
