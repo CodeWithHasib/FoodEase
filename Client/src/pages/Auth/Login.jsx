@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../utils/AuthProvider';
 
 const Login = () => {
+    const { login } = useContext(AuthContext)
+    const handleSubmit = e => {
+        e.preventDefault();
+        const fromData = new FormData(e.target);
+        const data = Object.fromEntries(fromData);
+        console.log(data);
+    }
     return (
         <div className='mt-10'>
             <section className="py-26 bg-white">
@@ -12,7 +20,7 @@ const Login = () => {
                             </a>
                             <h2 className="text-3xl md:text-4xl font-extrabold mb-2">Sign in</h2>
                         </div>
-                        <form action="">
+                        <form onSubmit={handleSubmit} action="">
                             <div className="mb-6">
                                 <label className="block mb-2 font-extrabold" htmlFor="email">Email</label>
                                 <input
@@ -23,6 +31,7 @@ const Login = () => {
                                      outline-none
                                       bg-white shadow border-2 border-blue-500 rounded"
                                     type="email"
+                                    name='email'
                                     id="email"
                                     placeholder="Enter Your Email"
                                 />
@@ -32,12 +41,13 @@ const Login = () => {
                                 <input
                                     className="inline-block 
                                     w-full px-4 py-2 leading-6 text-lg
-                                     font-extrabold placeholder-gray-400
+                                     font-extra4bold placeholder-gray-400
                                      placeholder:text-base placeholder:font-normal
                                      outline-none
                                       bg-white shadow border-2 border-blue-500 rounded"
                                     type="password"
                                     id="password"
+                                    name='password'
                                     placeholder="Enter Your Password"
                                 />
                             </div>

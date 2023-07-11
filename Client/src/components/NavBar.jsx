@@ -1,13 +1,41 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
+import { AuthContext } from '../utils/AuthProvider';
+import Swal from 'sweetalert2';
+const navLinks = [
+  { name: 'Home', link: '/' },
+  { name: 'Items', link: '/' },
+  { name: 'Shop', link: '/' },
+]
 const NavBar = () => {
+  const { user, logout } = useContext(AuthContext);
   const [show, setShow] = useState(false);
-  const navLinks = [
-    { name: 'Home', link: '/' },
-    { name: 'Items', link: '/' },
-    { name: 'Shop', link: '/' },
-  ]
+  const location = useLocation();
+  const logoutHandler = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Logout!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout()
+          .then(() => {
+            Swal.fire(
+              'Okk!',
+              'You are logged out.',
+              'success'
+            )
+          })
+          .catch(err => console.log(`Error while logging out ${err}`))
+      }
+    })
+  }
+
   return (
     <nav className='fixed  top-0 w-full bg-white'>
       <div className=" flex md:px-20 px-7 justify-between bg-white w-full items-center  backdrop-blur-2xl bg-opacity-20 py-4">
@@ -25,9 +53,15 @@ const NavBar = () => {
               ))
             }
             <li className='inline-block px-4 py-2'>
-              <Link className='font-bold hover:text-blue-600 duration-200' to='/login'>Login</Link>
+              {
+                user ? <Link className='font-bold hover:text-blue-600 text-blue-500 duration-200' to='/'>{user.displayName}</Link> : <Link className='font-bold hover:text-blue-600 duration-200' to={`${location.pathname === '/login' ? '/register' : '/login'}`}>{location.pathname === '/login' ? 'Register' : 'Login'}</Link>
+              }
             </li>
-
+            {
+              user && <li className='inline-block px-4 py-2'>
+                <span onClick={() => logoutHandler()} className='font-bold cursor-pointer hover:text-blue-600 text-red-500 duration-200'>Logout</span>
+              </li>
+            }
           </ul>
         </div>
         <div className={`md:hidden`}>
