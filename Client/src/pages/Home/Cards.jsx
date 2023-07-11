@@ -1,18 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useAddToCart } from '../../hooks/useAddToCart';
 import { AuthContext } from '../../utils/AuthProvider';
+import { toast } from 'react-hot-toast';
 
 const Cards = () => {
     const { user } = useContext(AuthContext)
     const [data, setData] = useState([]);
 
-    const [cartData, refetch] = useAddToCart()
+    const [cartData, refetch , isLoading] = useAddToCart()
     console.log(cartData)
     useEffect(() => {
         fetch('fakeData.json')
             .then((res) => res.json())
-            .then((json) => setData(json))
-    }, [])
+            .then((json) => {
+                setData(json)
+                refetch();
+            })
+    }, [refetch])
     const cartClickHandler = id => {
         console.log(id)
         fetch('http://localhost:5000/cart', {
@@ -30,11 +34,14 @@ const Cards = () => {
             .then(result => {
                 console.log(result)
                 if (result.insertedId) {
-                    alert('Item added to cart')
+                    refetch()
+                    toast.success('Added to cart')
                 }
             })
     }
-
+    if (isLoading) {
+        return <h1>Loading...</h1>
+    }
     return (
         <>
 

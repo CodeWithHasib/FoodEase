@@ -11,7 +11,7 @@ const navLinks = [
 ]
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
-  const [cartData] = useAddToCart();
+  const [cartData =[]] = useAddToCart();
   const [show, setShow] = useState(false);
   const location = useLocation();
   const logoutHandler = () => {
@@ -55,7 +55,7 @@ const NavBar = () => {
               ))
             }
             <li className='inline-block px-4 py-2'>
-              <Link className='font-bold hover:text-blue-600 duration-200 relative' to='/cart'><span>Cart</span> <span className='w-fit absolute bg-blue-700 text-white px-2 rounded-full -top-5 left-5'>00</span></Link>
+              <Link className='font-bold hover:text-blue-600 duration-200 relative' to='/cart'><span>Cart</span> <span className='w-fit absolute bg-blue-700 text-white px-2 rounded-full -top-5 left-5'>{cartData.length}</span></Link>
             </li>
             <li className='inline-block px-4 py-2'>
               {
