@@ -10,7 +10,7 @@ const NavBar = () => {
   ]
   return (
     <nav className='fixed  top-0 w-full bg-white'>
-      <div className=" flex md:px-20 px-7 justify-between bg-blue-600 w-full items-center  backdrop-blur-2xl bg-opacity-20 py-4">
+      <div className=" flex md:px-20 px-7 justify-between bg-white w-full items-center  backdrop-blur-2xl bg-opacity-20 py-4">
         <div className="">
           <h1 className='text-3xl font-bold'>Food Ease</h1>
         </div>
