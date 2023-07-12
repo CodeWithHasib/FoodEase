@@ -6,25 +6,25 @@ const History = () => {
     const [paginatedData, setPaginatedData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemPerPage = 1;
-    
-    const totalPage = Math.ceil(orderData.length / itemPerPage); 
-    
-    const { user } = useContext(AuthContext); 
+
+    const totalPage = Math.ceil(orderData.length / itemPerPage);
+
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         fetch(`http://localhost:5000/orders/${user.email}`)
             .then((res) => res.json())
             .then((data) => setOrderData(data))
     }, [user])
-    const handlePageChange = (e , value) => setCurrentPage(value); 
+    const handlePageChange = (e, value) => setCurrentPage(value);
+    console.log(orderData)
 
-
-    useEffect(()=>{
-        const lastIdx = currentPage * itemPerPage; 
-        const firstIdx =  lastIdx - itemPerPage ; 
-        const result = orderData.slice(firstIdx , lastIdx)
+    useEffect(() => {
+        const lastIdx = currentPage * itemPerPage;
+        const firstIdx = lastIdx - itemPerPage;
+        const result = orderData.slice(firstIdx, lastIdx)
         setPaginatedData(result)
-    },[currentPage , orderData])
+    }, [currentPage, orderData])
     return (
         <>
             <div className="">
@@ -39,11 +39,14 @@ const History = () => {
                             {order.orderItems.map((item) => (
                                 <div key={item._id} className="order-item flex items-center mb-2">
                                     <img className="item-image w-16 h-16 object-cover mr-2" src={item.food.image} alt={item.food.name} />
-                                    <div>
+                                    <div className='w-[80%] mr-4'>
                                         <h2 className="item-name font-bold">{item.food.name}</h2>
                                         <p className="text-gray-600 text-sm">{item.food.description}</p>
                                     </div>
-                                    <p className="item-price font-bold ml-auto">${item.totalPrice.toFixed(2)}</p>
+                                    <div className="">
+                                        <p className="item-price font-bold ml-auto">${item.totalPrice.toFixed(2)}</p>
+                                        <p className="item-quantity font-bold text-gray-600">x {item.quantity}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>

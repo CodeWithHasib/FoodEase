@@ -17,8 +17,7 @@ const Cards = () => {
             })
     }, [refetch])
     const cartClickHandler = id => {
-        console.log(id)
-        if (!user.email) {
+        if (!user?.email || !user) {
             return toast.error('Please login first')
         }
         if (cartData.find(item => item.itemId === id)) {

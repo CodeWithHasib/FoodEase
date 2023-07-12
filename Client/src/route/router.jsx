@@ -5,6 +5,7 @@ import Login from '../pages/Auth/Login'
 import Register from '../pages/Auth/Register'
 import Cart from '../pages/cart/Cart'
 import History from '../pages/orders/History'
+import PrivetRoute from './PrivetRoute'
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -13,22 +14,22 @@ export const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home />
-            }, 
+            },
             {
                 path: '/login',
-                element : <Login />
-            }, 
+                element: <Login />
+            },
             {
                 path: '/register',
-                element : <Register />
-            }, 
+                element: <Register />
+            },
             {
-                path : '/cart', 
-                element : <Cart />
-            }, 
+                path: '/cart',
+                element: <PrivetRoute><Cart /></PrivetRoute>
+            },
             {
                 path: '/my-orders',
-                element: <History />
+                element: <PrivetRoute><History /></PrivetRoute>
             }
         ]
     }

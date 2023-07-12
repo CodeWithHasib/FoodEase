@@ -59,7 +59,7 @@ const NavBar = () => {
             </li>
             {
               user && <li className='inline-block px-4 py-2'>
-                <Link className='font-bold hover:text-blue-600 duration-200' to='/my-orders'>My Orders</Link>
+                <Link className='font-bold hover:text-blue-600 duration-200' to='/my-orders'>Orders Summary</Link>
               </li>
             }
             <li className='inline-block px-4 py-2'>
@@ -101,7 +101,7 @@ const NavBar = () => {
         </li>
         {
           user && <li className='inline-block px-4 py-2'>
-            <Link className='font-bold hover:text-blue-600 duration-200' to='/my-orders'>My Orders</Link>
+            <Link className='font-bold hover:text-blue-600 duration-200' to='/my-orders'>Orders Summary</Link>
           </li>
         }
         <li className='inline-block px-4 py-2'>
