@@ -11,7 +11,7 @@ const navLinks = [
 ]
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
-  const [cartData =[]] = useAddToCart();
+  const [cartData = []] = useAddToCart();
   const [show, setShow] = useState(false);
   const location = useLocation();
   const logoutHandler = () => {
@@ -57,6 +57,11 @@ const NavBar = () => {
             <li className='inline-block px-4 py-2'>
               <Link className='font-bold hover:text-blue-600 duration-200 relative' to='/cart'><span>Cart</span> <span className='w-fit absolute bg-blue-700 text-white px-2 rounded-full -top-5 left-5'>{cartData.length}</span></Link>
             </li>
+            {
+              user && <li className='inline-block px-4 py-2'>
+                <Link className='font-bold hover:text-blue-600 duration-200' to='/my-orders'>My Orders</Link>
+              </li>
+            }
             <li className='inline-block px-4 py-2'>
               {
                 user ? <Link className='font-bold hover:text-blue-600 text-blue-500 duration-200' to='/'>{user.displayName}</Link> : <Link className='font-bold hover:text-blue-600 duration-200' to={`${location.pathname === '/login' ? '/register' : '/login'}`}>{location.pathname === '/login' ? 'Register' : 'Login'}</Link>
@@ -83,6 +88,32 @@ const NavBar = () => {
         <li className='inline-block px-4 py-2'>
           <Link className='font-bold hover:text-blue-600 duration-200' to='/'>Shop</Link>
         </li>
+        {
+
+          navLinks.map((link, index) => (
+            <li key={index} className='inline-block px-4 py-2'>
+              <Link className='font-bold hover:text-blue-600 duration-200' to={link.link}>{link.name}</Link>
+            </li>
+          ))
+        }
+        <li className='inline-block px-4 py-2'>
+          <Link className='font-bold hover:text-blue-600 duration-200 relative' to='/cart'><span>Cart</span> <span className='w-fit absolute bg-blue-700 text-white px-2 rounded-full -top-5 left-5'>{cartData.length}</span></Link>
+        </li>
+        {
+          user && <li className='inline-block px-4 py-2'>
+            <Link className='font-bold hover:text-blue-600 duration-200' to='/my-orders'>My Orders</Link>
+          </li>
+        }
+        <li className='inline-block px-4 py-2'>
+          {
+            user ? <Link className='font-bold hover:text-blue-600 text-blue-500 duration-200' to='/'>{user.displayName}</Link> : <Link className='font-bold hover:text-blue-600 duration-200' to={`${location.pathname === '/login' ? '/register' : '/login'}`}>{location.pathname === '/login' ? 'Register' : 'Login'}</Link>
+          }
+        </li>
+        {
+          user && <li className='inline-block px-4 py-2'>
+            <span onClick={() => logoutHandler()} className='font-bold cursor-pointer hover:text-blue-600 text-red-500 duration-200'>Logout</span>
+          </li>
+        }
       </ul>
     </nav>
   );

@@ -4,6 +4,7 @@ import Home from '../pages/Home/Home'
 import Login from '../pages/Auth/Login'
 import Register from '../pages/Auth/Register'
 import Cart from '../pages/cart/Cart'
+import History from '../pages/orders/History'
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
             {
                 path : '/cart', 
                 element : <Cart />
+            }, 
+            {
+                path: '/my-orders',
+                element: <History />
             }
         ]
     }

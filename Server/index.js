@@ -30,7 +30,7 @@ async function run() {
         const database = client.db("foodease");
         const foodsCollection = database.collection("foods");
         const cartsCollections = database.collection('carts');
-
+        const ordersCollections = database.collection('orders');
 
 
 
@@ -91,13 +91,71 @@ async function run() {
             const result = await cartsCollections.updateOne(query, updateDoc);
             res.send(result);
         })
+        // Get Total Price Via quantity and price . 
+        app.get('/total-price/:email', async (req, res) => {
+            const email = req.params.email;
+            const pipeline = [
+                {
+                    '$match': {
+                        'userEmail': email
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'foods',
+                        'localField': 'itemId',
+                        'foreignField': 'uuid',
+                        'as': 'food'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$food'
+                    }
+                },
+                {
+                    '$project': {
+                        'food': 1,
+                        'quantity': 1,
+                        'totalPrice': { $multiply: ['$food.price', '$quantity'] }
+                    }
+                }
+            ];
+            const cursor = cartsCollections.aggregate(pipeline);
+            const cart = await cursor.toArray();
+            const totalPrice = cart.reduce((total, item) => total + item.totalPrice, 0);
+            res.send({ totalPrice });
+        })
+        app.delete('/delete-item/:email/:uuid', async (req, res) => {
+            const email = req.params.email;
+            const uuid = req.params.uuid;
+            const query = { userEmail: email, itemId: uuid };
+            const result = await cartsCollections.deleteOne(query);
+            res.send(result);
+        });
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollections.insertOne(order);
+            res.send(result);
+        })
+        app.get('/orders/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const orders = await ordersCollections.find(query).sort({ orderDate: -1 }).toArray();
+            res.send(orders);
+        });
 
         app.get('/foods', async (req, res) => {
             const cursor = foodsCollection.find({});
             const foods = await cursor.toArray();
             res.send(foods);
         })
-
+        app.delete('/delete-all/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { userEmail: email };
+            const result = await cartsCollections.deleteMany(query);
+            res.send(result);
+        });
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
