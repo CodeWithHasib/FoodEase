@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useAddToCart } from '../../hooks/useAddToCart';
 import { Pagination } from '@mui/material';
 import { AuthContext } from '../../utils/AuthProvider';
 const Cart = () => {
@@ -30,8 +29,31 @@ const Cart = () => {
                 setData(result)
             })
     }, [user.email])
-    console.log(data)
-    
+    const totalPrice = data.reduce((acc, item) => acc + item.food.price, 0)
+
+
+    const handleAddQuantity = id => {
+        fetch(`http://localhost:5000/upgrade-quantity`, {
+            method: 'PATCH',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                // Find the old quantity and add 1 to it
+                quantity: data.find(item => item._id === id).quantity + 1,
+                email: user.email,
+                uuid: data.find(item => item._id === id).food.uuid
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res)
+            })
+
+    }
+
+
+
     return (
         <div>
             <div className=" py-8">
@@ -58,15 +80,15 @@ const Cart = () => {
                                                         <span className="font-semibold">{item.food.name}</span>
                                                     </div>
                                                 </td>
-                                                <td className="py-4">$19.99</td>
+                                                <td className="py-4">${item.food.price}</td>
                                                 <td className="py-4">
                                                     <div className="flex items-center">
-                                                        <button className="border rounded-md py-2 px-4 mr-2">-</button>
-                                                        <span className="text-center w-8">1</span>
-                                                        <button className="border rounded-md py-2 px-4 ml-2">+</button>
+                                                        <button className="border hover:bg-blue-600 hover:text-white duration-300 rounded-md py-2 px-4 mr-2">-</button>
+                                                        <span className="text-center w-8">{item.quantity}</span>
+                                                        <button onClick={() => handleAddQuantity(item._id)} className="border hover:bg-blue-600 hover:text-white duration-300 rounded-md py-2 px-4 ml-2">+</button>
                                                     </div>
                                                 </td>
-                                                <td className="py-4">$19.99</td>
+                                                <td className="py-4">${item.totalPrice}</td>
                                             </tr>
                                             )
                                         }
@@ -80,20 +102,20 @@ const Cart = () => {
                                 <h2 className="text-lg font-semibold mb-4">Summary</h2>
                                 <div className="flex justify-between mb-2">
                                     <span>Subtotal</span>
-                                    <span>$19.99</span>
+                                    <span>${totalPrice}</span>
                                 </div>
                                 <div className="flex justify-between mb-2">
                                     <span>Taxes</span>
-                                    <span>$1.99</span>
+                                    <span>free</span>
                                 </div>
                                 <div className="flex justify-between mb-2">
                                     <span>Shipping</span>
-                                    <span>$0.00</span>
+                                    <span>free</span>
                                 </div>
                                 <hr className="my-2" />
                                 <div className="flex justify-between mb-2">
                                     <span className="font-semibold">Total</span>
-                                    <span className="font-semibold">$21.98</span>
+                                    <span className="font-semibold">${totalPrice.toFixed(2)}</span>
                                 </div>
                                 <button className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
                             </div>

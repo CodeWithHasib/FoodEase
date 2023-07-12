@@ -30,6 +30,11 @@ async function run() {
         const database = client.db("foodease");
         const foodsCollection = database.collection("foods");
         const cartsCollections = database.collection('carts');
+
+
+
+
+
         // Cart collections . 
 
         app.post('/cart', async (req, res) => {
@@ -68,14 +73,23 @@ async function run() {
                 {
                     '$project': {
                         'food': 1,
-                        'quantity': 1
+                        'quantity': 1,
+                        'totalPrice': { $multiply: ['$food.price', '$quantity'] }
                     }
                 }
-            ]
+            ];
             const cursor = cartsCollections.aggregate(pipeline);
             const cart = await cursor.toArray();
             res.send(cart);
-
+        });
+        app.patch('/upgrade-quantity', async (req, res) => {
+            const { email, uuid, quantity } = req.body;
+            const query = { userEmail: email, itemId: uuid };
+            const updateDoc = {
+                $set: { quantity: quantity }
+            }
+            const result = await cartsCollections.updateOne(query, updateDoc);
+            res.send(result);
         })
 
         app.get('/foods', async (req, res) => {
